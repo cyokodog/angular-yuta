@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -6,11 +6,11 @@ import { AppComponent } from './app.component';
 import { DrillModule } from './drill/module';
 
 @NgModule({
-  declarations: [
+    declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule,
+    // BrowserModule,
     AppRoutingModule,
     DrillModule
   ],

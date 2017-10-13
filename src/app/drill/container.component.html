@@ -1,4 +1,19 @@
 <div class="container">
-drill
-
+  <div>
+    <button (click)="requestQuestion()" [attr.disabled]="startButtonDisabled">開始する</button>
+  </div>
+  <div>
+    {{quesition?.text}}
+  </div>
+  <div>
+    <ol>
+      <li *ngFor="let answer of quesition?.answers;let index = index;trackBy:trackByIndex;">
+        <input [(ngModel)]="quesition.answers[index]"/>
+        <span>{{getScoreText(quesition.scorings[index])}}</span>
+      </li>
+    </ol>
+  </div>
+  <div>
+    <button (click)="answer()">回答する</button>
+  </div>
 </div>
