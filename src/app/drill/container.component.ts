@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
+import * as marked from 'marked';
 
 interface Question {
   text: string;
@@ -26,7 +27,10 @@ export class DrillContainerComponent implements OnInit {
 
   questions: Question[] = [
     {
-      text: '<ul><li>日本一高い山は？</li><li>日本の首都は？</li></ul>',
+      text: `
+1. 日本一高い山は？
+2. 日本の首都は？
+      `,
       html: null,
       collects: ['富士山', '東京'],
       answers: null,
@@ -66,7 +70,7 @@ export class DrillContainerComponent implements OnInit {
   requestQuestion() {
     this.testState = TestState.running;
     this.quesition = this.questions[0];
-    this.quesition.html = this.domSanitiser.bypassSecurityTrustHtml(this.quesition.text);
+    this.quesition.html = this.domSanitiser.bypassSecurityTrustHtml(marked(this.quesition.text));
     this.quesition.answers = new Array(this.quesition.collects.length);
     this.quesition.scorings = new Array(this.quesition.collects.length);
   }
