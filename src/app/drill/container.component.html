@@ -2,9 +2,11 @@
   <div>
     <button (click)="requestQuestion()" [attr.disabled]="startButtonDisabled">開始する</button>
   </div>
-  <div>
-    {{quesition?.text}}
-  </div>
+
+  <div>問題</div>
+  <div [innerHTML]="quesition?.html"></div>
+
+  <div>回答</div>
   <div>
     <ol>
       <li *ngFor="let answer of quesition?.answers;let index = index;trackBy:trackByIndex;">

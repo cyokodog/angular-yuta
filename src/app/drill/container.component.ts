@@ -1,11 +1,9 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  OnInit
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 
 interface Question {
   text: string;
+  html: SafeHtml;
   collects: string[];
   answers: string[];
   scorings: boolean[];
@@ -28,7 +26,8 @@ export class DrillContainerComponent implements OnInit {
 
   questions: Question[] = [
     {
-      text: '1. 日本一高い山は？ 2. 日本の首都は？',
+      text: '<ul><li>日本一高い山は？</li><li>日本の首都は？</li></ul>',
+      html: null,
       collects: ['富士山', '東京'],
       answers: null,
       scorings: null,
@@ -36,6 +35,9 @@ export class DrillContainerComponent implements OnInit {
   ];
 
   quesition: Question;
+
+  constructor(private domSanitiser: DomSanitizer){
+  }
 
   ngOnInit() {
   }
@@ -64,6 +66,7 @@ export class DrillContainerComponent implements OnInit {
   requestQuestion() {
     this.testState = TestState.running;
     this.quesition = this.questions[0];
+    this.quesition.html = this.domSanitiser.bypassSecurityTrustHtml(this.quesition.text);
     this.quesition.answers = new Array(this.quesition.collects.length);
     this.quesition.scorings = new Array(this.quesition.collects.length);
   }
