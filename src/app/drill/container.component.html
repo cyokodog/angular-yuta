@@ -1,21 +1,24 @@
 <div class="container">
-  <div>
-    <button (click)="requestQuestion()" [attr.disabled]="startButtonDisabled">開始する</button>
+  <div *ngIf="isStopped">
+    <button (click)="onStartButtonClicked()">開始する</button>
   </div>
 
-  <div>問題</div>
-  <div [innerHTML]="quesition?.html"></div>
+  <div *ngIf="!isStopped">
+    <div>問題</div>
+    <div [innerHTML]="quesition?.html"></div>
 
-  <div>回答</div>
-  <div>
-    <ol>
-      <li *ngFor="let answer of quesition?.answers;let index = index;trackBy:trackByIndex;">
-        <input [(ngModel)]="quesition.answers[index]"/>
-        <span>{{getScoreText(quesition.scorings[index])}}</span>
-      </li>
-    </ol>
-  </div>
-  <div>
-    <button (click)="answer()">回答する</button>
+    <div>回答</div>
+    <div>
+      <ol>
+        <li *ngFor="let answer of quesition?.answers;let index = index;trackBy:trackByIndex;">
+          <input [(ngModel)]="quesition.answers[index]"/>
+          <span>{{getScoreText(quesition.scorings[index])}}</span>
+        </li>
+      </ol>
+    </div>
+    <div>
+      <button (click)="onAnswerButtonClicked()" [attr.disabled]="answerButtonDisabled">回答する</button>
+      <button (click)="onNextButtonClicked()" [attr.disabled]="nextButtonDisabled">次の問題</button>
+    </div>
   </div>
 </div>

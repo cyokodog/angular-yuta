@@ -11,8 +11,9 @@ interface Question {
 }
 
 export enum TestState {
+  stopped,
   running,
-  stopped
+  paused
 }
 
 @Component({
@@ -35,7 +36,14 @@ export class DrillContainerComponent implements OnInit {
       collects: ['富士山', '東京'],
       answers: null,
       scorings: null,
-    }
+    },
+    {
+      text: `1 + 2 =`,
+      html: null,
+      collects: ['3'],
+      answers: null,
+      scorings: null,
+    },
   ];
 
   quesition: Question;
@@ -46,33 +54,62 @@ export class DrillContainerComponent implements OnInit {
   ngOnInit() {
   }
 
-  get startButtonDisabled(): boolean {
-    if (this.testState === TestState.running) {
-      return true;
-    }
-    return null;
-  }
-
   getScoreText(scoring: boolean): string {
     return scoring === true ? '○' : scoring === false ? '☓' : '';
-  }
-
-  answer() {
-    this.quesition.collects.forEach((answer, i) => {
-      this.quesition.scorings[i] = this.quesition.answers[i] === answer;
-    });
   }
 
   trackByIndex(index: number, obj: any): any {
     return index;
   }
 
-  requestQuestion() {
+  onStartButtonClicked() {
+    this.requestQuestion();
+  }
+
+  onAnswerButtonClicked() {
+    this.answer();
+  }
+
+  onNextButtonClicked() {
+    this.requestQuestion();
+  }
+
+  get isStopped(): boolean {
+    return this.testState === TestState.stopped;
+  }
+
+  get answerButtonDisabled(): boolean {
+    if (this.testState === TestState.running) {
+      return null;
+    }
+    return true;
+  }
+
+  get nextButtonDisabled(): boolean {
+    if (this.testState === TestState.paused) {
+      return null;
+    }
+    return true;
+  }
+
+  private answer() {
+    this.quesition.collects.forEach((answer, i) => {
+      this.quesition.scorings[i] = this.quesition.answers[i] === answer;
+    });
+    this.testState = TestState.paused;
+  }
+
+  private requestQuestion() {
+    const index = this.getRandomNumber(0, this.questions.length - 1);
     this.testState = TestState.running;
-    this.quesition = this.questions[0];
+    this.quesition = this.questions[index];
     this.quesition.html = this.domSanitiser.bypassSecurityTrustHtml(marked(this.quesition.text));
     this.quesition.answers = new Array(this.quesition.collects.length);
     this.quesition.scorings = new Array(this.quesition.collects.length);
+  }
+
+  private getRandomNumber(min: number, max: number) {
+    return Math.floor( Math.random() * (max + 1 - min) ) + min;
   }
 
 }
