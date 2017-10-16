@@ -8,11 +8,15 @@ import { Questions } from './questions';
 @Injectable()
 export class DrillRepositoryService {
 
-  entities$   = new BehaviorSubject<Questions>(Questions.blank());
+  questions$   = new BehaviorSubject<Questions>(Questions.blank());
   question$   = new BehaviorSubject<Question>(Question.blank());
 
-  private _entities: Questions;
+  private _questions: Questions;
   private _question: Question;
+
+  private neededFinishingCount = 2;
+  private pickupedCache = {};
+  private clearCount = 0;
 
   constructor(
     private api: DrillApiService
@@ -22,11 +26,16 @@ export class DrillRepositoryService {
   fetch() {
     this.api
       .get()
-      .subscribe(data => this.entities = data);
+      .subscribe(data => this.questions = data);
+  }
+
+  start() {
+    this.initPickupedInfo();
+    this.pickup();
   }
 
   pickup() {
-    this.question = this.entities.pickup();
+    this.question = this.questions.toArray()[this.getRandomQuestionIndex()];
   }
 
   scoring() {
@@ -34,19 +43,59 @@ export class DrillRepositoryService {
     this.question.collects.forEach((answer, i) => {
       this.question.scorings[i] = this.question.answers[i] === answer;
     });
+    this.clearCount ++;
   }
 
-  get isDataReady(): boolean {
-    return !!this.entities;
+  get isReady(): boolean {
+    return !!this.questions;
   }
 
-  private get entities(): Questions {
-    return this._entities;
+  get isFinished(): boolean {
+    return this.clearCount >= this.questionCount;
   }
 
-  private set entities(v: Questions) {
-    this._entities = v;
-    this.entities$.next(this._entities);
+  get canFinishing(): boolean {
+    return this.clearCount >= this.neededFinishingCount;
+  }
+
+  get questionCount(): number{
+    return this.questions.toArray().length;
+  }
+
+  private initPickupedInfo() {
+    this.clearCount = 0;
+    this.pickupedCacheKeys.forEach(key => {
+      this.questions.toArray()[key].initialieze();
+    });
+    this.pickupedCache = [];
+  }
+
+  private get pickupedCacheKeys() {
+    return Object.keys(this.pickupedCache);
+  }
+
+  private getRandomQuestionIndex() {
+    const min = 0;
+    const max = this.questionCount - 1;
+    const index = Math.floor( Math.random() * (max + 1 - min) ) + min;
+
+    if (!this.pickupedCache[index]) {
+      this.pickupedCache[index] = true;
+      return index;
+    }
+    if (this.isFinished) {
+      this.initPickupedInfo();
+    }
+    return this.getRandomQuestionIndex();
+  }
+
+  private get questions(): Questions {
+    return this._questions;
+  }
+
+  private set questions(v: Questions) {
+    this._questions = v;
+    this.questions$.next(this._questions);
   }
 
   private get question(): Question {

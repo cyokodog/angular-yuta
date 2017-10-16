@@ -14,6 +14,10 @@ export class DrillCommandsService {
     this.drillRepo.fetch();
   }
 
+  start() {
+    this.drillRepo.start();
+  }
+
   pickup() {
     this.drillRepo.pickup();
   }

@@ -14,15 +14,23 @@ export class DrillQueriesService {
   }
 
   get questions$(): Observable<Questions> {
-    return this.drillRepo.entities$;
+    return this.drillRepo.questions$;
   }
 
   get question$(): Observable<Question> {
     return this.drillRepo.question$;
   }
 
-  get isDataReady(): boolean {
-    return this.drillRepo.isDataReady;
+  get isReady(): boolean {
+    return this.drillRepo.isReady;
+  }
+
+  get isFinished(): boolean {
+    return this.drillRepo.isFinished;
+  }
+
+  get canFinishing(): boolean {
+    return this.drillRepo.canFinishing;
   }
 
 }

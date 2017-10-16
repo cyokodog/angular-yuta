@@ -9,7 +9,8 @@ import { Question } from '../shared/models/drill/question';
 export enum TestState {
   stopped,
   running,
-  paused
+  paused,
+  finished
 }
 
 @Component({
@@ -23,6 +24,7 @@ export class DrillContainerComponent implements OnInit {
   testState: TestState = TestState.stopped;
 
   question: Question;
+  answers: Question[] = [];
   questionHtml: SafeHtml;
   scorings: string[] = [];
 
@@ -37,8 +39,15 @@ export class DrillContainerComponent implements OnInit {
     this.commands.fetchInitialData();
     this.queries.question$.subscribe(question => {
       this.question = question;
-      this.questionHtml = this.toHtml(question.text);
     });
+  }
+
+  toHtml(markdown): SafeHtml {
+    return this.domSanitiser.bypassSecurityTrustHtml(marked(markdown));
+  }
+
+  getScoreText(scoring: boolean): string {
+    return scoring === true ? '○' : scoring === false ? '☓' : '';
   }
 
   trackByIndex(index: number, obj: any): any {
@@ -46,7 +55,7 @@ export class DrillContainerComponent implements OnInit {
   }
 
   onStartButtonClicked() {
-    this.pickupQuestion();
+    this.start();
   }
 
   onAnswerButtonClicked() {
@@ -54,15 +63,31 @@ export class DrillContainerComponent implements OnInit {
   }
 
   onNextButtonClicked() {
-    this.pickupQuestion();
+    this.pickup();
+  }
+
+  onFinishButtonClicked() {
+    this.finish();
   }
 
   get isStopped(): boolean {
     return this.testState === TestState.stopped;
   }
 
+  get isRunning(): boolean {
+    return this.testState === TestState.running;
+  }
+
+  get isPaused(): boolean {
+    return this.testState === TestState.paused;
+  }
+
+  get isFinished(): boolean {
+    return this.testState === TestState.finished;
+  }
+
   get startButtonDisabled(): boolean {
-    return this.queries.isDataReady ? null : false;
+    return this.queries.isReady ? null : false;
   }
 
   get answerButtonDisabled(): boolean {
@@ -70,35 +95,31 @@ export class DrillContainerComponent implements OnInit {
   }
 
   get nextButtonDisabled(): boolean {
-    return this.testState === TestState.paused ? null : true;
+    return !this.queries.isFinished && this.testState === TestState.paused ? null : true;
   }
 
-  private toHtml(markdown): SafeHtml {
-    return this.domSanitiser.bypassSecurityTrustHtml(marked(markdown));
+  get finishButtonDisabled(): boolean {
+    return this.queries.canFinishing ? null : true;
+  }
+
+  private finish() {
+    this.testState = TestState.finished;
   }
 
   private scoring() {
     this.commands.scoring();
-    this.bindScoringText();
+    this.answers.push(this.question);
     this.testState = TestState.paused;
   }
 
-  private pickupQuestion() {
-    this.commands.pickup();
-    this.clearScoringText();
+  private start() {
+    this.commands.start();
     this.testState = TestState.running;
   }
 
-  private bindScoringText(){
-    this.scorings = this.question.scorings.map(scoring => this.getScoreText(scoring));
-  }
-
-  private clearScoringText(){
-    this.scorings = this.question.scorings.map(scoring => '');
-  }
-
-  private getScoreText(scoring: boolean): string {
-    return scoring === true ? '○' : scoring === false ? '☓' : '';
+  private pickup() {
+    this.commands.pickup();
+    this.testState = TestState.running;
   }
 
 }

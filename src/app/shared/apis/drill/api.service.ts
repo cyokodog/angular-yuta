@@ -31,8 +31,8 @@ export class DrillApiService {
 
   private prepareQuestionsAsPromise(): Promise<Questions> {
     return new Promise(resolve => {
-      const db = this.firebase.database(); // データベースへの参照を得る
-      const messageRef = db.ref('/questions'); // '/message'への参照を作成する
+      const db = this.firebase.database();
+      const messageRef = db.ref('/questions');
       messageRef.on('value', snapshot => {
         const dbQuestions = snapshot.val();
         const questions = [];

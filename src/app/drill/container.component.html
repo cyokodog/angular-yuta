@@ -1,18 +1,18 @@
 <div class="container">
   <div *ngIf="isStopped">
-    <button (click)="onStartButtonClicked()" [attr.disabled]="startButtonDisabled">開始する</button>
+    <button (click)="onStartButtonClicked()" [attr.disabled]="startButtonDisabled">ドリルを開始する</button>
   </div>
 
-  <div *ngIf="!isStopped">
+  <div *ngIf="isRunning || isPaused">
     <div>問題</div>
-    <div [innerHTML]="questionHtml"></div>
+    <div [innerHTML]="toHtml(question.text)"></div>
 
     <div>回答</div>
     <div>
       <ol>
         <li *ngFor="let answer of question.answers;let index = index;trackBy:trackByIndex;">
           <input [(ngModel)]="question.answers[index]"/>
-          <span>{{scorings[index]}}</span>
+          <span>{{getScoreText(question.scorings[index])}}</span>
         </li>
       </ol>
     </div>
@@ -20,8 +20,22 @@
     <div>
       <button (click)="onAnswerButtonClicked()" [attr.disabled]="answerButtonDisabled">回答する</button>
       <button (click)="onNextButtonClicked()" [attr.disabled]="nextButtonDisabled">次の問題</button>
+      <button (click)="onFinishButtonClicked()" [attr.disabled]="finishButtonDisabled">終了する</button>
     </div>
-
-
   </div>
+
+  <div *ngIf="isFinished">
+    <div>結果</div>
+    <div *ngFor="let answarGroup of answers;let index1 = index;trackBy:trackByIndex;">
+      <div [innerHTML]="toHtml(answers[index1].text)"></div>
+      <ol>
+        <li *ngFor="let answer of answers[index1].answers;let index2 = index;trackBy:trackByIndex;">
+          <span>{{answers[index1].answers[index2]}}</span>
+          <span>{{getScoreText(answers[index1].scorings[index2])}}</span>
+        </li>
+      </ol>
+      <hr/>
+    </div>
+  </div>
+
 </div>

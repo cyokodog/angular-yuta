@@ -1,8 +1,6 @@
 interface AdaptedQuestion {
   text: string;
   collects: string[];
-  answers: string[];
-  scorings: boolean[];
 }
 
 export class Question {
@@ -14,17 +12,19 @@ export class Question {
     return new Question({
       text: '',
       collects: [],
-      answers: [],
-      scorings: []
     });
   }
 
   constructor(
     private item: AdaptedQuestion,
   ) {
-    if (item.collects && item.collects.length) {
-      this.answers = new Array(item.collects.length);
-      this.scorings = new Array(item.collects.length);
+    this.initialieze();
+  }
+
+  initialieze() {
+    if (this.item.collects && this.item.collects.length) {
+      this.answers = new Array(this.item.collects.length);
+      this.scorings = new Array(this.item.collects.length);
     }
   }
 
