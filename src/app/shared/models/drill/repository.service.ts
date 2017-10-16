@@ -36,6 +36,10 @@ export class DrillRepositoryService {
     });
   }
 
+  get isDataReady(): boolean {
+    return !!this.entities;
+  }
+
   private get entities(): Questions {
     return this._entities;
   }

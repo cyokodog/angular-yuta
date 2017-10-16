@@ -21,4 +21,8 @@ export class DrillQueriesService {
     return this.drillRepo.question$;
   }
 
+  get isDataReady(): boolean {
+    return this.drillRepo.isDataReady;
+  }
+
 }

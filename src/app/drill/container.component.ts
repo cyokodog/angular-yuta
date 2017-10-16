@@ -16,7 +16,7 @@ export enum TestState {
   selector:    'app-drill-container',
   templateUrl: './container.component.html',
   styleUrls:   ['./container.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DrillContainerComponent implements OnInit {
 
@@ -59,6 +59,10 @@ export class DrillContainerComponent implements OnInit {
 
   get isStopped(): boolean {
     return this.testState === TestState.stopped;
+  }
+
+  get startButtonDisabled(): boolean {
+    return this.queries.isDataReady ? null : false;
   }
 
   get answerButtonDisabled(): boolean {

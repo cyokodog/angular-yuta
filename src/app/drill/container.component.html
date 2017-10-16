@@ -1,6 +1,6 @@
 <div class="container">
   <div *ngIf="isStopped">
-    <button (click)="onStartButtonClicked()">開始する</button>
+    <button (click)="onStartButtonClicked()" [attr.disabled]="startButtonDisabled">開始する</button>
   </div>
 
   <div *ngIf="!isStopped">
