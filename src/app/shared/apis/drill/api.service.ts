@@ -2,43 +2,46 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { AsyncSubject } from 'rxjs/AsyncSubject';
 
+import { WindowRef } from '../../lib/window-ref';
 import { Question } from '../../models/drill/question';
 import { Questions } from '../../models/drill/questions';
-
-const SAMPLE = [
-  {
-    text: `
-1. 日本一高い山は？
-2. 日本の首都は？
-    `,
-    collects: ['富士山', '東京'],
-    answers: null,
-    scorings: null
-  },
-  {
-    text: `1 + 2 =`,
-    collects: ['3'],
-    answers: null,
-    scorings: null
-  },
-];
 
 @Injectable()
 export class DrillApiService {
 
-  data: Questions;
+  private firebase: any;
+  private data: Questions;
+  private questionsReady: Promise<Questions>;
 
-  constructor() {
-    this.data = new Questions(SAMPLE.map(question => {
-      return new Question(question);
-    }));
+  constructor(
+    private windowRef: WindowRef
+  ) {
+    this.firebase = windowRef.nativeWindow['firebase'];
+    this.questionsReady = this.prepareQuestionsAsPromise().then(data => this.data = data);
   }
 
   get(): Observable<Questions> {
     const questions$ = new AsyncSubject<Questions>();
-    questions$.next(this.data);
-    questions$.complete();
+    this.questionsReady.then(() => {
+      questions$.next(this.data);
+      questions$.complete();
+    });
     return questions$;
+  }
+
+  private prepareQuestionsAsPromise(): Promise<Questions> {
+    return new Promise(resolve => {
+      const db = this.firebase.database(); // データベースへの参照を得る
+      const messageRef = db.ref('/questions'); // '/message'への参照を作成する
+      messageRef.on('value', snapshot => {
+        const dbQuestions = snapshot.val();
+        const questions = [];
+        for(let key in dbQuestions) {
+          questions.push(new Question(dbQuestions[key]));
+        }
+        resolve(new Questions(questions));
+      });
+    });
   }
 
 }
