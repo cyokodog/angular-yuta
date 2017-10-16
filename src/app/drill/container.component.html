@@ -5,20 +5,23 @@
 
   <div *ngIf="!isStopped">
     <div>問題</div>
-    <div [innerHTML]="quesition?.html"></div>
+    <div [innerHTML]="questionHtml"></div>
 
     <div>回答</div>
     <div>
       <ol>
-        <li *ngFor="let answer of quesition?.answers;let index = index;trackBy:trackByIndex;">
-          <input [(ngModel)]="quesition.answers[index]"/>
-          <span>{{getScoreText(quesition.scorings[index])}}</span>
+        <li *ngFor="let answer of question.answers;let index = index;trackBy:trackByIndex;">
+          <input [(ngModel)]="question.answers[index]"/>
+          <span>{{scorings[index]}}</span>
         </li>
       </ol>
     </div>
+
     <div>
       <button (click)="onAnswerButtonClicked()" [attr.disabled]="answerButtonDisabled">回答する</button>
       <button (click)="onNextButtonClicked()" [attr.disabled]="nextButtonDisabled">次の問題</button>
     </div>
+
+
   </div>
 </div>

@@ -2,13 +2,9 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import * as marked from 'marked';
 
-interface Question {
-  text: string;
-  html: SafeHtml;
-  collects: string[];
-  answers: string[];
-  scorings: boolean[];
-}
+import { DrillCommandsService } from './commands.service';
+import { DrillQueriesService } from './queries.service';
+import { Question } from '../shared/models/drill/question';
 
 export enum TestState {
   stopped,
@@ -26,36 +22,23 @@ export class DrillContainerComponent implements OnInit {
 
   testState: TestState = TestState.stopped;
 
-  questions: Question[] = [
-    {
-      text: `
-1. 日本一高い山は？
-2. 日本の首都は？
-      `,
-      html: null,
-      collects: ['富士山', '東京'],
-      answers: null,
-      scorings: null,
-    },
-    {
-      text: `1 + 2 =`,
-      html: null,
-      collects: ['3'],
-      answers: null,
-      scorings: null,
-    },
-  ];
+  question: Question;
+  questionHtml: SafeHtml;
+  scorings: string[] = [];
 
-  quesition: Question;
-
-  constructor(private domSanitiser: DomSanitizer){
+  constructor(
+    private commands: DrillCommandsService,
+    private queries: DrillQueriesService,
+    private domSanitiser: DomSanitizer,
+  ){
   }
 
   ngOnInit() {
-  }
-
-  getScoreText(scoring: boolean): string {
-    return scoring === true ? '○' : scoring === false ? '☓' : '';
+    this.commands.fetchInitialData();
+    this.queries.question$.subscribe(question => {
+      this.question = question;
+      this.questionHtml = this.toHtml(question.text);
+    });
   }
 
   trackByIndex(index: number, obj: any): any {
@@ -63,15 +46,15 @@ export class DrillContainerComponent implements OnInit {
   }
 
   onStartButtonClicked() {
-    this.requestQuestion();
+    this.pickupQuestion();
   }
 
   onAnswerButtonClicked() {
-    this.answer();
+    this.scoring();
   }
 
   onNextButtonClicked() {
-    this.requestQuestion();
+    this.pickupQuestion();
   }
 
   get isStopped(): boolean {
@@ -79,37 +62,30 @@ export class DrillContainerComponent implements OnInit {
   }
 
   get answerButtonDisabled(): boolean {
-    if (this.testState === TestState.running) {
-      return null;
-    }
-    return true;
+    return this.testState === TestState.running ? null : true;
   }
 
   get nextButtonDisabled(): boolean {
-    if (this.testState === TestState.paused) {
-      return null;
-    }
-    return true;
+    return this.testState === TestState.paused ? null : true;
   }
 
-  private answer() {
-    this.quesition.collects.forEach((answer, i) => {
-      this.quesition.scorings[i] = this.quesition.answers[i] === answer;
-    });
+  private toHtml(markdown): SafeHtml {
+    return this.domSanitiser.bypassSecurityTrustHtml(marked(markdown));
+  }
+
+  private scoring() {
+    this.commands.scoring();
+    this.scorings = this.question.scorings.map(scoring => this.getScoreText(scoring));
     this.testState = TestState.paused;
   }
 
-  private requestQuestion() {
-    const index = this.getRandomNumber(0, this.questions.length - 1);
+  private pickupQuestion() {
+    this.commands.pickup();
     this.testState = TestState.running;
-    this.quesition = this.questions[index];
-    this.quesition.html = this.domSanitiser.bypassSecurityTrustHtml(marked(this.quesition.text));
-    this.quesition.answers = new Array(this.quesition.collects.length);
-    this.quesition.scorings = new Array(this.quesition.collects.length);
   }
 
-  private getRandomNumber(min: number, max: number) {
-    return Math.floor( Math.random() * (max + 1 - min) ) + min;
+  private getScoreText(scoring: boolean): string {
+    return scoring === true ? '○' : scoring === false ? '☓' : '';
   }
 
 }
