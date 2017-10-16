@@ -79,13 +79,22 @@ export class DrillContainerComponent implements OnInit {
 
   private scoring() {
     this.commands.scoring();
-    this.scorings = this.question.scorings.map(scoring => this.getScoreText(scoring));
+    this.bindScoringText();
     this.testState = TestState.paused;
   }
 
   private pickupQuestion() {
     this.commands.pickup();
+    this.clearScoringText();
     this.testState = TestState.running;
+  }
+
+  private bindScoringText(){
+    this.scorings = this.question.scorings.map(scoring => this.getScoreText(scoring));
+  }
+
+  private clearScoringText(){
+    this.scorings = this.question.scorings.map(scoring => '');
   }
 
   private getScoreText(scoring: boolean): string {
