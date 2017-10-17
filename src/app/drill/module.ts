@@ -7,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { DrillContainerComponent } from './container.component';
 import { DrillCommandsService } from './commands.service';
 import { DrillQueriesService } from './queries.service';
+import { DrillManagerModule } from './manager/module';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { DrillQueriesService } from './queries.service';
     BrowserModule,
     RouterModule,
     FormsModule,
-    SharedModule
+    SharedModule,
+    DrillManagerModule
   ]
 })
 export class DrillModule { }

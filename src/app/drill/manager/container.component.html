@@ -1,0 +1,30 @@
+<div>
+  <div *ngIf="isNoEdit">
+    <button (click)="onQuestionAdditionButtonClicked()">問題を追加する</button>
+  </div>
+
+  <div *ngIf="isAdding || isUpdating">
+    <div>問題</div>
+    <textarea [(ngModel)]="question.text"></textarea>
+    <div>回答</div>
+    <ol>
+      <li *ngFor="let collect of question.collects;let index = index;trackBy:trackByIndex;">
+        <input [(ngModel)]="question.collects[index]"/>
+        <button *ngIf="index > 0" (click)="onCollectDeleteButtonClicked(index)">削除</button>
+      </li>
+      <li><button (click)="onCollectAdditionButtonClicked()">回答の追加</button></li>
+    </ol>
+    <div>
+      <button (click)="onQuestionSaveButtonClicked()">保存</button>
+      <button (click)="onCancelButtonClicked()">キャンセル</button>
+      <button (click)="onQuestionDeleteButtonClicked()" *ngIf="isUpdating">削除</button>
+    </div>
+  </div>
+
+  <ol *ngIf="!!questions && isNoEdit">
+    <li *ngFor="let question of questions;let index = index;trackBy:trackByIndex;">
+      <button (click)="onQuestionUpdatingButtonClicked(index)">編集</button>
+      {{question.text}}
+    </li>
+  </ol>
+</div>

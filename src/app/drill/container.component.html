@@ -1,5 +1,8 @@
 <div class="container">
   <div *ngIf="isStopped">
+    <a href="/drill/manager">問題の管理</a>
+  </div>
+  <div *ngIf="isStopped">
     <button (click)="onStartButtonClicked()" [attr.disabled]="startButtonDisabled">ドリルを開始する</button>
   </div>
 
@@ -35,6 +38,9 @@
         </li>
       </ol>
       <hr/>
+    </div>
+    <div>
+      <button (click)="onStartButtonClicked()">もう一度やる</button>
     </div>
   </div>
 

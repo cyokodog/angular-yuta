@@ -1,4 +1,5 @@
 interface AdaptedQuestion {
+  key: string;
   text: string;
   collects: string[];
 }
@@ -10,6 +11,7 @@ export class Question {
 
   static blank(): Question {
     return new Question({
+      key: '',
       text: '',
       collects: [],
     });
@@ -28,12 +30,24 @@ export class Question {
     }
   }
 
+  set text(v: string) {
+    this.item.text = v;
+  }
+
   get text(): string {
     return this.item.text;
   }
 
+  set collects(v: string[]) {
+    this.item.collects = v;
+  }
+
   get collects(): string[] {
     return this.item.collects;
+  }
+
+  get key(): string {
+    return this.item.key;
   }
 
 }

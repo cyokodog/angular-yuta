@@ -46,6 +46,10 @@ export class DrillRepositoryService {
     this.clearCount ++;
   }
 
+  save(questions: Questions) {
+    this.api.save(questions);
+  }
+
   get isReady(): boolean {
     return !!this.questions;
   }
