@@ -1,13 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
-import * as marked from 'marked';
+import { Subscription } from 'rxjs/Subscription';
 
 import { DrillManagerCommandsService } from './commands.service';
 import { DrillManagerQueriesService } from './queries.service';
 import { Questions } from '../../shared/models/drill/questions';
 import { Question } from '../../shared/models/drill/question';
 
-export enum Mode {
+enum Mode {
   noEdit,
   add,
   update,
@@ -19,7 +19,9 @@ export enum Mode {
   templateUrl: './container.component.html',
   styleUrls:   ['./container.component.css'],
 })
-export class DrillManagerContainerComponent implements OnInit {
+export class DrillManagerContainerComponent implements OnInit, OnDestroy {
+
+  protected subscriptions = [] as Subscription[];
 
   mode: Mode = Mode.noEdit;
   question: Question = Question.blank();
@@ -35,13 +37,15 @@ export class DrillManagerContainerComponent implements OnInit {
 
   ngOnInit() {
     this.commands.fetchInitialData();
-    this.queries.questions$.subscribe(questions => {
-      this.questions = questions.toArray();
-    });
+    this.subscriptions.push(
+      this.queries.questions$.subscribe(questions => {
+        this.questions = questions.toArray();
+      })
+    );
   }
 
-  toHtml(markdown): SafeHtml {
-    return this.domSanitiser.bypassSecurityTrustHtml(marked(markdown));
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   trackByIndex(index: number, obj: any): any {

@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
+import { Subscription } from 'rxjs/Subscription';
 import * as marked from 'marked';
 
 import { DrillCommandsService } from './commands.service';
 import { DrillQueriesService } from './queries.service';
 import { Question } from '../shared/models/drill/question';
 
-export enum TestState {
+enum TestState {
   stopped,
   running,
   paused,
@@ -19,10 +20,11 @@ export enum TestState {
   styleUrls:   ['./container.component.css'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrillContainerComponent implements OnInit {
+export class DrillContainerComponent implements OnInit, OnDestroy{
+
+  protected subscriptions = [] as Subscription[];
 
   testState: TestState = TestState.stopped;
-
   question: Question;
   answers: Question[] = [];
   questionHtml: SafeHtml;
@@ -37,9 +39,15 @@ export class DrillContainerComponent implements OnInit {
 
   ngOnInit() {
     this.commands.fetchInitialData();
-    this.queries.question$.subscribe(question => {
-      this.question = question;
-    });
+    this.subscriptions.push(
+      this.queries.question$.subscribe(question => {
+        this.question = question;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   toHtml(markdown): SafeHtml {
