@@ -3,6 +3,7 @@
     <a routerLink="/" routerLinkActive="active">ホーム</a>
     <a routerLink="/drill" routerLinkActive="active">ドリル</a>
     <a routerLink="" routerLinkActive="active">お小遣い</a>
+    <img *ngIf="user" class="st-Header_UserPhoto" src="{{user.photoURL}}"/>
   </nav>
 </div>
 <router-outlet></router-outlet>
