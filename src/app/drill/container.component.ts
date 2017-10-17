@@ -47,7 +47,7 @@ export class DrillContainerComponent implements OnInit {
   }
 
   getScoreText(scoring: boolean): string {
-    return scoring === true ? '○' : scoring === false ? '☓' : '';
+    return scoring === true ? '○ 正解' : scoring === false ? '☓ 不正解' : '';
   }
 
   trackByIndex(index: number, obj: any): any {
@@ -86,6 +86,22 @@ export class DrillContainerComponent implements OnInit {
     return this.testState === TestState.finished;
   }
 
+  get startButtonDisabledClass(): boolean{
+    return this.startButtonDisabled !== null;
+  }
+
+  get answerButtonDisabledClass(): boolean{
+    return this.answerButtonDisabled !== null;
+  }
+
+  get nextButtonDisabledClass(): boolean{
+    return this.nextButtonDisabled !== null;
+  }
+
+  get finishButtonDisabledClass(): boolean{
+    return this.finishButtonDisabled !== null;
+  }
+
   get startButtonDisabled(): boolean {
     return this.queries.isReady ? null : false;
   }
@@ -114,6 +130,7 @@ export class DrillContainerComponent implements OnInit {
 
   private start() {
     this.commands.start();
+    this.answers = [];
     this.testState = TestState.running;
   }
 

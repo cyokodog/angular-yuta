@@ -1,30 +1,62 @@
-<div>
-  <div *ngIf="isNoEdit">
-    <button (click)="onQuestionAdditionButtonClicked()">問題を追加する</button>
+<div class="drill-Header">
+  <a href="/drill">ドリルをやる</a>
+</div>
+<div class="drill-Body">
+  <div
+    *ngIf="isNoEdit"
+    class="drill-CmdSection1"
+  >
+    <button
+      class="ui-Button"
+      (click)="onQuestionAdditionButtonClicked()"
+    >問題を追加する</button>
   </div>
 
   <div *ngIf="isAdding || isUpdating">
-    <div>問題</div>
+    <h3>問題</h3>
     <textarea [(ngModel)]="question.text"></textarea>
-    <div>回答</div>
+
+    <h3>解答</h3>
     <ol>
       <li *ngFor="let collect of question.collects;let index = index;trackBy:trackByIndex;">
         <input [(ngModel)]="question.collects[index]"/>
-        <button *ngIf="index > 0" (click)="onCollectDeleteButtonClicked(index)">削除</button>
+        <button
+          class="ui-Button_Danger"
+          *ngIf="index > 0"
+          (click)="onCollectDeleteButtonClicked(index)"
+        >削除</button>
       </li>
-      <li><button (click)="onCollectAdditionButtonClicked()">回答の追加</button></li>
+      <li>
+        <button
+          class="ui-Button_Assist"
+          (click)="onCollectAdditionButtonClicked()"
+        >解答の追加</button>
+      </li>
     </ol>
-    <div>
-      <button (click)="onQuestionSaveButtonClicked()">保存</button>
-      <button (click)="onCancelButtonClicked()">キャンセル</button>
-      <button (click)="onQuestionDeleteButtonClicked()" *ngIf="isUpdating">削除</button>
+    <div class="drill-CmdSection2">
+      <button
+        class="ui-Button"
+        (click)="onQuestionSaveButtonClicked()"
+      >保存</button>
+      <button
+        class="ui-Button_Quit"
+        (click)="onCancelButtonClicked()"
+      >キャンセル</button>
+      <button
+        class="ui-Button_Danger"
+       (click)="onQuestionDeleteButtonClicked()"
+        *ngIf="isUpdating"
+      >削除</button>
     </div>
   </div>
 
   <ol *ngIf="!!questions && isNoEdit">
     <li *ngFor="let question of questions;let index = index;trackBy:trackByIndex;">
-      <button (click)="onQuestionUpdatingButtonClicked(index)">編集</button>
-      {{question.text}}
+      <button
+        class="ui-Button"
+        (click)="onQuestionUpdatingButtonClicked(index)"
+      >編集</button>
+      <span class="drill-CollectList_ShortText">{{question.text}}</span>
     </li>
   </ol>
 </div>

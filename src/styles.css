@@ -1,1 +1,121 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+  padding-bottom: 50px;
+  font-size: 18px;
+  color: #555;
+}
+a:visited,
+a {
+  text-decoration: none;
+  color: #00aaff;
+}
+h1,h2,h3,h4,h5 {
+  font-weight: normal;
+}
+h3 {
+  border-bottom: solid 1px #00aaff;
+  color: #00aaff;
+  font-size: 25px;
+}
+input {
+  padding: 10px;
+  font-size: 15px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  width: 200px;
+}
+textarea {
+  padding: 10px;
+  font-size: 15px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  width: 580px;
+  height: 200px;
+}
+
+
+.ui-Button,
+.ui-Button_Quit,
+.ui-Button_Danger,
+.ui-Button_Disabled,
+.ui-Button_Assist {
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  background-color: #00aaff;
+  cursor: pointer;
+}
+.ui-Button_Quit {
+  background-color: #555;
+  color: #fff;
+}
+.ui-Button_Assist {
+  background-color: #55cc55;
+  color: #fff;
+}
+.ui-Button_Danger {
+  background-color: #ff7777;
+  color: #fff;
+}
+.ui-Button_Disabled {
+  background-color: #ddd;
+  color: #fff;
+  cursor: default;
+}
+
+.st-Header {
+  padding: 20px;
+  background-color: #00aaff;
+  color: #fff;
+  text-align: center;
+}
+.st-Header_Nav a,
+.st-Header_Nav a:visited{
+  margin: 0 10px;
+  color: #fff;
+}
+
+
+.drill-Header {
+  padding: 20px;
+  background-color: #eee;
+  color: #555;
+  text-align: right;
+}
+.drill-Header_Nav a{
+  margin: 0 10px;
+}
+.drill-CmdSection1 {
+  margin-bottom: 50px;
+  text-align: center;
+}
+.drill-CmdSection2 {
+  margin-top: 50px;
+}
+.drill-CmdSection2 button{
+  min-width: 150px;
+}
+.drill-Body {
+  margin:0 auto;
+  padding-top: 50px;
+  max-width: 600px;
+}
+.drill-Body li{
+  margin: 5px 0;
+}
+.drill-Result_Section {
+  margin: 10px 0;
+  padding: 10px 0;
+  border-bottom: solid 1px #00aaff;
+}
+.drill-CollectList_ShortText {
+  display: inline-block;
+  width: 450px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}

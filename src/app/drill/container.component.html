@@ -1,16 +1,23 @@
-<div class="container">
-  <div *ngIf="isStopped">
-    <a href="/drill/manager">問題の管理</a>
-  </div>
-  <div *ngIf="isStopped">
-    <button (click)="onStartButtonClicked()" [attr.disabled]="startButtonDisabled">ドリルを開始する</button>
+<div class="drill-Header">
+  <a href="/drill/manager">問題の管理</a>
+</div>
+<div
+  class="drill-Body"
+>
+  <div *ngIf="isStopped" class="drill-CmdSection1">
+    <button
+      class="ui-Button"
+      [class.ui-Button_Disabled]="startButtonDisabledClass"
+      (click)="onStartButtonClicked()"
+      [attr.disabled]="startButtonDisabled"
+    >ドリルを開始する</button>
   </div>
 
   <div *ngIf="isRunning || isPaused">
-    <div>問題</div>
+    <h3>問題</h3>
     <div [innerHTML]="toHtml(question.text)"></div>
 
-    <div>回答</div>
+    <h3>回答</h3>
     <div>
       <ol>
         <li *ngFor="let answer of question.answers;let index = index;trackBy:trackByIndex;">
@@ -20,16 +27,37 @@
       </ol>
     </div>
 
-    <div>
-      <button (click)="onAnswerButtonClicked()" [attr.disabled]="answerButtonDisabled">回答する</button>
-      <button (click)="onNextButtonClicked()" [attr.disabled]="nextButtonDisabled">次の問題</button>
-      <button (click)="onFinishButtonClicked()" [attr.disabled]="finishButtonDisabled">終了する</button>
+    <div class="drill-CmdSection2">
+      <button
+        class="ui-Button"
+        [class.ui-Button_Disabled]="answerButtonDisabledClass"
+        (click)="onAnswerButtonClicked()"
+        [attr.disabled]="answerButtonDisabled"
+      >回答する</button>
+      <button
+        class="ui-Button"
+        [class.ui-Button_Disabled]="nextButtonDisabledClass"
+        (click)="onNextButtonClicked()"
+        [attr.disabled]="nextButtonDisabled"
+      >次の問題</button>
+      <button
+        class="ui-Button_Quit"
+        [class.ui-Button_Disabled]="finishButtonDisabledClass"
+        (click)="onFinishButtonClicked()"
+        [attr.disabled]="finishButtonDisabled"
+      >終了する</button>
     </div>
   </div>
 
-  <div *ngIf="isFinished">
-    <div>結果</div>
-    <div *ngFor="let answarGroup of answers;let index1 = index;trackBy:trackByIndex;">
+  <div
+    *ngIf="isFinished"
+    class="drill-Result"
+  >
+    <h3>結果</h3>
+    <div
+      class="drill-Result_Section"
+      *ngFor="let answarGroup of answers;let index1 = index;trackBy:trackByIndex;"
+    >
       <div [innerHTML]="toHtml(answers[index1].text)"></div>
       <ol>
         <li *ngFor="let answer of answers[index1].answers;let index2 = index;trackBy:trackByIndex;">
@@ -37,11 +65,15 @@
           <span>{{getScoreText(answers[index1].scorings[index2])}}</span>
         </li>
       </ol>
-      <hr/>
     </div>
-    <div>
-      <button (click)="onStartButtonClicked()">もう一度やる</button>
+    <div class="drill-CmdSection2">
+      <button
+        class="ui-Button"
+        (click)="onStartButtonClicked()"
+      >もう一度やる
+      </button>
     </div>
   </div>
 
 </div>
+
