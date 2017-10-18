@@ -50,7 +50,10 @@
     </div>
   </div>
 
-  <ol *ngIf="!!questions && isNoEdit">
+  <ol
+    class="drill-CollectList"
+    *ngIf="!!questions && isNoEdit"
+  >
     <li *ngFor="let question of questions;let index = index;trackBy:trackByIndex;">
       <button
         class="ui-Button"
