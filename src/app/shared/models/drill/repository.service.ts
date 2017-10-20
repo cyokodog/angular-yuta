@@ -39,7 +39,9 @@ export class DrillRepositoryService {
   }
 
   scoring() {
-    if (!this.question) return;
+    if (!this.question) {
+      return;
+    }
     this.question.collects.forEach((answer, i) => {
       this.question.scorings[i] = this.question.answers[i] === answer;
     });

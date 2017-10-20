@@ -20,23 +20,21 @@ export class Firebase {
   }
 
   auth() {
-    const provider = new this.firebase.auth.GoogleAuthProvider();
-    this.firebase.auth().onAuthStateChanged(user => {
-      if (!user) {
-        this.firebase.auth().signInWithRedirect(provider)
-      }
-      else {
-        this.user = user;
-      }
-    })
-    this.firebase.auth().getRedirectResult().then(result => {
-      if (!result.user) {
-        this.firebase.auth().signInWithRedirect(provider)
-      }
-      else {
-        this.user = result.user;
-      }
-    });
+    // const provider = new this.firebase.auth.GoogleAuthProvider();
+    // this.firebase.auth().onAuthStateChanged(user => {
+    //   if (!user) {
+    //     this.firebase.auth().signInWithRedirect(provider)
+    //   } else {
+    //     this.user = user;
+    //   }
+    // })
+    // this.firebase.auth().getRedirectResult().then(result => {
+    //   if (!result.user) {
+    //     this.firebase.auth().signInWithRedirect(provider)
+    //   } else {
+    //     this.user = result.user;
+    //   }
+    // });
   }
 
 }

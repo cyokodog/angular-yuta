@@ -9,7 +9,7 @@ export class DrillManagerQueriesService {
 
   constructor(
     private drillRepo: DrillRepositoryService
-  ){
+  ) {
   }
 
   get questions$(): Observable<Questions> {

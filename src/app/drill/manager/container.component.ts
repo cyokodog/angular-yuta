@@ -32,7 +32,7 @@ export class DrillManagerContainerComponent implements OnInit, OnDestroy {
     private commands: DrillManagerCommandsService,
     private queries: DrillManagerQueriesService,
     private domSanitiser: DomSanitizer,
-  ){
+  ) {
   }
 
   ngOnInit() {
@@ -101,14 +101,12 @@ export class DrillManagerContainerComponent implements OnInit, OnDestroy {
   private save(mode: Mode) {
     if (mode === Mode.delete) {
       this.questions.splice(this.updatingIndex, 1);
-    }
-    else if (mode === Mode.update) {
+    } else if (mode === Mode.update) {
       const question = this.questions[this.updatingIndex];
       question.text = this.question.text;
       question.collects = this.question.collects;
       this.trimEmptyCollect(question);
-    }
-    else {
+    } else {
       this.trimEmptyCollect(this.question);
       this.questions.push(this.question);
     }

@@ -18,9 +18,8 @@ enum TestState {
   selector:    'app-drill-container',
   templateUrl: './container.component.html',
   styleUrls:   ['./container.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DrillContainerComponent implements OnInit, OnDestroy{
+export class DrillContainerComponent implements OnInit, OnDestroy {
 
   protected subscriptions = [] as Subscription[];
 
@@ -34,7 +33,7 @@ export class DrillContainerComponent implements OnInit, OnDestroy{
     private commands: DrillCommandsService,
     private queries: DrillQueriesService,
     private domSanitiser: DomSanitizer,
-  ){
+  ) {
   }
 
   ngOnInit() {

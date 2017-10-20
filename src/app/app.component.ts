@@ -10,7 +10,7 @@ export class AppComponent {
 
   constructor(
     private firebase: Firebase
-  ){
+  ) {
     firebase.auth();
   }
 

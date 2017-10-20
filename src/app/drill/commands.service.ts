@@ -7,7 +7,7 @@ export class DrillCommandsService {
 
   constructor(
     private drillRepo: DrillRepositoryService
-  ){
+  ) {
   }
 
   fetchInitialData() {
