@@ -9,27 +9,25 @@ import { Questions } from '../../models/drill/questions';
 @Injectable()
 export class DrillApiService {
 
-  private firebase: any;
   private db;
   private questionsRef;
-  private data: Questions;
+  private questions: Questions;
   private questionsReady: Promise<Questions>;
 
   private queue = [];
 
   constructor(
-    private _firebase: Firebase
+    private firebase: Firebase
   ) {
-    this.firebase = _firebase.instance;
-    this.db = this.firebase.database();
+    this.db = firebase.instance.database();
     this.questionsRef = this.db.ref('/questions');
-    this.questionsReady = this.prepareQuestions().then(data => this.data = data);
+    this.questionsReady = this.prepareQuestions();
   }
 
   get(): Observable<Questions> {
     const questions$ = new AsyncSubject<Questions>();
     this.questionsReady.then(() => {
-      questions$.next(this.data);
+      questions$.next(this.questions);
       questions$.complete();
     });
     return questions$;
@@ -44,21 +42,23 @@ export class DrillApiService {
       };
     });
     this.questionsRef.set(params);
+    this.questionsReady = this.prepareQuestions();
   }
 
   private prepareQuestions(): Promise<Questions> {
     return new Promise(resolve => {
-      this.questionsRef.on('value', snapshot => {
-        const dbQuestions = snapshot.val();
-        const questionsBuf = [];
-        for(let key in dbQuestions) {
-          questionsBuf.push(new Question({
+      this.questionsRef.once('value', snapshot => {
+        const questions = snapshot.val();
+        const buf = [];
+        for (const key of Object.keys(questions)) {
+          buf.push(new Question({
             key: key,
-            text: dbQuestions[key].text,
-            collects: dbQuestions[key].collects
+            text: questions[key].text,
+            collects: questions[key].collects
           }));
         }
-        resolve(new Questions(questionsBuf));
+        this.questions = new Questions(buf);
+        resolve();
       });
     });
   }
