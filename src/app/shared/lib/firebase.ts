@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { WindowRef } from './window-ref';
 import { firebaseConfig } from '../../../environments/firebase-config';
+import * as firebase from 'firebase';
+
 
 @Injectable()
 export class Firebase {
@@ -8,9 +9,8 @@ export class Firebase {
   private firebase: any;
 
   constructor(
-    private windowRef: WindowRef
   ) {
-    this.firebase = this.windowRef.nativeWindow['firebase'];
+    this.firebase = firebase;
     this.firebase.initializeApp(firebaseConfig);
   }
 
