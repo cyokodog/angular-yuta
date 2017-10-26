@@ -1,20 +1,30 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
-import { Firebase } from './shared/lib/firebase';
+import { AppCommandsService } from './app.commands.service';
+import { AppQueriesService } from './app.queries.service';
+import { Auth } from './shared/models/auth/auth';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent  {
 
   constructor(
-    private firebase: Firebase
+    private commands: AppCommandsService,
+    private queries: AppQueriesService,
   ) {
-    firebase.auth();
+    this.commands.signIn();
   }
 
-  get user(): any {
-    return this.firebase.user;
+  onSignOutButtonClicked() {
+    this.commands.signOut().then(_ => location.reload());
   }
+
+  get auth$(): Observable<Auth> {
+    return this.queries.auth$;
+  }
+
 }

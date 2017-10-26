@@ -1,9 +1,17 @@
-<div class="st-Header">
-  <nav class="st-Header_Nav">
-    <a routerLink="/" routerLinkActive="active">ホーム</a>
-    <a routerLink="/drill" routerLinkActive="active">ドリル</a>
-    <a routerLink="" routerLinkActive="active">お小遣い</a>
-    <img *ngIf="user" class="st-Header_UserPhoto" src="{{user.photoURL}}"/>
-  </nav>
+<div *ngIf="!(auth$ | async).authenticated">loading...</div>
+<div *ngIf="(auth$ | async).authenticated" class="st-container">
+  <div class="st-Header">
+    <nav class="st-Header_Nav">
+      <a routerLink="/" routerLinkActive="active">ホーム</a>
+      <a routerLink="/drill" routerLinkActive="active">ドリル</a>
+      <a routerLink="" routerLinkActive="active">お小遣い</a>
+      <a
+        (click)="onSignOutButtonClicked()"
+        routerLinkActive="active"
+      >ユーザ変更
+      </a>
+      <img class="st-Header_UserPhoto" src="{{(auth$ | async)?.photoURL}}"/>
+    </nav>
+  </div>
+  <router-outlet></router-outlet>
 </div>
-<router-outlet></router-outlet>

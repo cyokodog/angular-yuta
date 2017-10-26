@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AppCommandsService } from './app.commands.service';
+import { AppQueriesService } from './app.queries.service';
 import { DrillModule } from './drill/module';
 
 @NgModule({
-    declarations: [
+  declarations: [
     AppComponent
   ],
   imports: [
@@ -14,7 +16,10 @@ import { DrillModule } from './drill/module';
     AppRoutingModule,
     DrillModule
   ],
-  providers: [],
+  providers: [
+    AppQueriesService,
+    AppCommandsService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
