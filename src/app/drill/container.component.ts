@@ -1,3 +1,8 @@
+import { AsyncSubject } from 'rxjs/AsyncSubject';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Questions } from './../shared/models/drill/questions';
+import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser'
 import { Subscription } from 'rxjs/Subscription';
@@ -23,16 +28,19 @@ export class DrillContainerComponent implements OnInit, OnDestroy {
 
   protected subscriptions = [] as Subscription[];
 
+  questions$   = new AsyncSubject<Questions>();
   testState: TestState = TestState.stopped;
   question: Question;
   answers: Question[] = [];
   questionHtml: SafeHtml;
   scorings: string[] = [];
+  questions: Questions;
 
   constructor(
     private commands: DrillCommandsService,
     private queries: DrillQueriesService,
     private domSanitiser: DomSanitizer,
+    private afDb: AngularFireDatabase
   ) {
   }
 

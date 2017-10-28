@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 import { AppCommandsService } from './app.commands.service';
 import { AppQueriesService } from './app.queries.service';
 import { DrillModule } from './drill/module';
+import { environment } from '../environments/environment';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 @NgModule({
   declarations: [
@@ -14,6 +18,10 @@ import { DrillModule } from './drill/module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    AngularFireModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
     DrillModule
   ],
   providers: [

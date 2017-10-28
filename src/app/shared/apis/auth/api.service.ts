@@ -1,30 +1,28 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { Firebase } from './../../lib/firebase';
+import * as firebase from 'firebase/app';
 import { Auth } from './../../models/auth/auth';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 @Injectable()
 export class AuthApiService {
 
   auth$ = new BehaviorSubject<Auth>(Auth.blank());
-
-  private firebase: any;
-  private authStateCheckCanceller: any;
+  private authStateChangeEventUnsubscription;
   private _auth: Auth;
 
   constructor(
-    firebase: Firebase
+    public afAuth: AngularFireAuth,
   ) {
-    this.firebase = firebase.instance;
   }
 
   signIn() {
-    if (this.authStateCheckCanceller) {
-      this.authStateCheckCanceller();
+    if (this.authStateChangeEventUnsubscription) {
+      this.authStateChangeEventUnsubscription();
     }
-    const provider = new this.firebase.auth.GoogleAuthProvider();
-    this.authStateCheckCanceller = this.firebase.auth().onAuthStateChanged(user => {
+    const authProvider = new firebase.auth.GoogleAuthProvider();
+    this.authStateChangeEventUnsubscription = this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
         this.auth = new Auth({
           authenticated: true,
@@ -33,13 +31,14 @@ export class AuthApiService {
         });
         return;
       }
-      this.firebase.auth().signInWithRedirect(provider)
+      this.afAuth.auth.signInWithRedirect(authProvider);
     });
+
     this.detectChangedAuthState();
   }
 
   signOut() {
-    return this.firebase.auth().signOut();
+    return this.afAuth.auth.signOut();
   }
 
   private detectChangedAuthState() {
